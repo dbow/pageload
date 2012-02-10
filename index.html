@@ -1,0 +1,149 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <script>
+  //Performance tracking module.
+  var Perf = {};
+  Perf.INLINE_JS_pageTop = new Date().getTime();
+  </script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/libs/modernizr-2.5.2.min.js"></script>
+</head>
+<body>
+  <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+  <header>
+
+  </header>
+  <div role="main">
+	<h2>Measuring Page Load times: Navigation Timing API vs Inline JavaScript with the Date object</h2>
+	<h4>Inline JavaScript events are in blue, Navigation API events mentioned in the blog post are in orange, and the rest of the Navigation API events are in black.</h4>
+	<p>This page is discussed in my blog post here.  It loads in 15 images and around 1000 DIVs, all hidden.  An arrow in the Time Since Previous column indicates that the event was concurrant with the previous one (above).</p>
+	<p>For more info see the <a href="https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html">w3c draft</a>, <a href="http://www.html5rocks.com/en/tutorials/webperformance/basics/">html5rocks page</a>, and/or <a href="http://msdn.microsoft.com/en-us/library/ff975075">microsoft docs</a></p>
+	<table id="output">
+		<thead>
+			<th>Timestamp</th>
+			<th>Event Name</th>
+			<th>Time Since Previous</th>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+	<div id="notSupported"></div>
+  </div>
+  <footer>
+
+	<div id="filler"></div>
+
+  </footer>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>
+
+  <script src="js/plugins.js"></script>
+  <script src="js/script.js"></script>
+
+  <script>
+    var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'http://www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+  </script>
+
+  <script>
+
+	// Performance tracking
+	$(function () {
+		Perf.INLINE_JS_jQueryReady = $.now();
+	});
+	$(window).load(function() {
+	    Perf.INLINE_JS_windowOnLoad = $.now();
+		// Use Navigation Timing API if supported
+		if (window.performance && window.performance.timing) {
+			Perf.orderedTiming = [];
+			Perf.parsePerformance = function () {
+				var timingObj = window.performance.timing,
+					loadEvent,
+					otherEvent;
+				for (loadEvent in timingObj) {
+					Perf.orderedTiming.push(timingObj[loadEvent] + '_-_' + loadEvent);
+				}
+				for (otherEvent in Perf) {
+					if (otherEvent.indexOf('INLINE_JS') !== -1) {
+						Perf.orderedTiming.push(Perf[otherEvent] + '_-_' + otherEvent);
+					}
+				}
+				Perf.orderedTiming.sort();
+			};
+			Perf.outputPerformance = function () {
+				var split,
+					time,
+					perfEvent,
+					currTime,
+					prevTime,
+					output = '',
+					row,
+					timeSince,
+					notableEvents = ['domLoading',
+									 'domInteractive',
+									 'domContentLoadedEventStart',
+									 'domContentLoadedEventEnd',
+									 'domComplete',
+									 'loadEventStart',
+									 'loadEventEnd'];
+				for (var i=0; i < Perf.orderedTiming.length; i++) {
+					row = '<tr><td>';
+					split = Perf.orderedTiming[i].split('_-_');
+					time = parseInt(split[0], 10);
+					perfEvent = split[1];
+					if (time !== 0) {
+						if (prevTime) {
+							currTime = time - prevTime;
+						} else {
+							currTime = 0;
+						}
+						if (perfEvent.indexOf('INLINE_JS') !== -1) {
+							row = '<tr class="inlineJS"><td>';
+						}
+						if (notableEvents.indexOf(perfEvent) !== -1) {
+							row = '<tr class="api"><td>';
+						}
+						if (currTime === 0) {
+							timeSince = '^';
+						} else {
+							timeSince = currTime + 'ms';
+						}
+						output += (row + time + '</td><td>' + perfEvent + '</td><td>' + timeSince + '</td></tr>');
+						prevTime = time;
+					}
+				}
+				$('#output > tbody').html(output);
+			};
+		}
+		// Give slight delay to allow loadEventEnd to finish.
+		window.setTimeout(  
+    		function() {  
+  				if (Perf.parsePerformance) {
+					Perf.parsePerformance();
+					Perf.outputPerformance();
+				} else {
+					$('#notSupported').text('Your browser doesn\'t support the Navigation Timing API!  Try reloading the page in Chrome, Firefox, or IE9+');
+				}
+    		},  
+    		50  
+		);
+	});
+
+	Perf.INLINE_JS_pageBottom = new Date().getTime();
+
+  </script>
+
+</body>
+</html>
