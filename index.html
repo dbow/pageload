@@ -24,9 +24,10 @@
   </header>
   <div role="main">
 	<h2>Measuring Page Load times: Navigation Timing API vs Inline JavaScript with the Date object</h2>
-	<h4>Inline JavaScript events are in blue, Navigation API events mentioned in the blog post are in orange, and the rest of the Navigation API events are in black.</h4>
-	<p>This page is discussed in my blog post here.  It loads in 15 images and around 1000 DIVs, all hidden.  An arrow in the Time Since Previous column indicates that the event was concurrant with the previous one (above).</p>
+	<h4>Inline JavaScript events are in blue, Navigation API events mentioned in the <a href="http://blog.d-bow.com/post/17368332231/measuring-page-load-times-navigation-timing-api-vs">blog post</a> are in orange, and the rest of the Navigation API events are in black.</h4>
+	<p>This page is discussed in my blog post <a href="http://blog.d-bow.com/post/17368332231/measuring-page-load-times-navigation-timing-api-vs">here</a>.  It loads in 15 images and around 1000 DIVs, all positioned 10000px off screen.  An arrow in the Time Since Previous column indicates that the event was concurrant with the previous one (above).</p>
 	<p>For more info see the <a href="https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html">w3c draft</a>, <a href="http://www.html5rocks.com/en/tutorials/webperformance/basics/">html5rocks page</a>, and/or <a href="http://msdn.microsoft.com/en-us/library/ff975075">microsoft docs</a></p>
+	<p>[<a href="https://github.com/bowman224/pageload">page source</a>]</p>
 	<table id="output">
 		<thead>
 			<th>Timestamp</th>
@@ -49,13 +50,6 @@
 
   <script src="js/plugins.js"></script>
   <script src="js/script.js"></script>
-
-  <script>
-    var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
-    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-    g.src=('https:'==location.protocol?'//ssl':'http://www')+'.google-analytics.com/ga.js';
-    s.parentNode.insertBefore(g,s)}(document,'script'));
-  </script>
 
   <script>
 

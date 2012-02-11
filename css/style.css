@@ -81,8 +81,9 @@ table tr td {
   color: red;
 }
 
-.hidden {
-  display: none;
+#filler {
+  position: absolute;
+  left: -10000px;
 }
 
 

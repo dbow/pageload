@@ -6,12 +6,13 @@ var Test = {};
 
 Test.Dom = (function () {
   
-  var me = {};
+  var me = {},
+      DIV_COUNT = 1000;
   
   me.setup = function () {
     
-    var divHtml = '<div class="hidden">TESTTESTTEST</div>',
-        imgDivHtmlStart = '<div class="hidden"><img src="',
+    var divHtml = '<div>TESTTESTTEST</div>',
+        imgDivHtmlStart = '<div><img src="',
         imgDivHtmlEnd = '"/></div>',
         i,
         fillerHtml = '',
@@ -33,10 +34,10 @@ Test.Dom = (function () {
                    'http://www.gstatic.com/hostedimg/1e22f520e491cc2b_landing'],
         imgListLength = imgList.length;
 
-    for (i=0; i < 1000; i++) {
+    for (i=0; i < DIV_COUNT; i++) {
       fillerHtml += divHtml;
     }
-    for (j=0; j<imgListLength; j++) {
+    for (j=0; j < imgListLength; j++) {
       fillerHtml += (imgDivHtmlStart + imgList[j] + imgDivHtmlEnd);      
     }
     $('#filler').html(fillerHtml);
