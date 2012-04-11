@@ -1,0 +1,10 @@
+Measuring Page Load times
+~~Navigation Timing API vs Inline JavaScript with the Date object~~
+
+[pageload.d-bow.com]
+
+A simple page to explore performance benchmarking with the Navigation
+Timing API and some alternatives, in the spirit of progressive enhancement.
+
+Full discussion here:
+http://blog.d-bow.com/post/17368332231/measuring-page-load-times-navigation-timing-api-vs
